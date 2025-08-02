@@ -15,9 +15,10 @@ const ProductModel = {
     return result.insertId;
   },
   findById: async (id) => {
-    const [rows] = await pool.execute('SELECT * FROM products WHERE id = ?', [
-      id,
-    ]);
+    const [rows] = await pool.execute(
+      'SELECT * FROM products WHERE id = ?',
+      [id]
+    );
     return rows[0];
   },
 
@@ -30,11 +31,13 @@ const ProductModel = {
     return result.affectedRows;
   },
 
-
   delete: async (id) => {
-    const [result] = await pool.execute("DELETE FROM products WHERE id = ?", [
-      id,
-    ]);
+    const [result] = await pool.execute(
+      'DELETE FROM products WHERE id = ?',
+      [id]
+    );
+
+  
     return result.affectedRows;
   },
 
@@ -42,7 +45,7 @@ const ProductModel = {
 
     const [rows] = await pool.execute("SELECT * FROM products");
     return rows;
-  },
+  }
 };
 
 module.exports = ProductModel;

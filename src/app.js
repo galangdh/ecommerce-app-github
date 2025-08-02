@@ -1,3 +1,4 @@
+
 require("dotenv").config();
 const express = require("express");
 const app = express();
@@ -16,3 +17,7 @@ app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
   console.log(`Access API at http://localhost:${PORT}/api`);
 });
+const productRoutes = require('./routes/productRoutes');
+
+app.use('/api/products', productRoutes);
+

@@ -1,3 +1,9 @@
+
+const pool = require("../config/db");
+const ProductModel = {
+  create: async (name, description, price, stock, imageUrl) => {
+    const [result] = await pool.execute(
+      "INSERT INTO products (name, description, price, stock, image_url) VALUES (?, ?, ?, ?, ?)",
 const pool = require('../config/db');
 
 const ProductModel = {
@@ -8,7 +14,6 @@ const ProductModel = {
     );
     return result.insertId;
   },
-
   findById: async (id) => {
     const [rows] = await pool.execute('SELECT * FROM products WHERE id = ?', [
       id,
@@ -18,26 +23,24 @@ const ProductModel = {
 
   update: async (id, name, description, price, stock, imageUrl) => {
     const [result] = await pool.execute(
-      'UPDATE products SET name = ?, description = ?, price = ?, stock = ?, image_url = ? WHERE id = ?',
+      "UPDATE products SET name = ?, description = ?, price = ?, stock = ?, image_url = ? WHERE id = ?",
+
       [name, description, price, stock, imageUrl, id]
     );
     return result.affectedRows;
   },
 
-  updateStock: async (id, stock) => {
-    const [result] = await pool.execute('UPDATE products SET stock = ? WHERE id = ?', [stock, id]);
-    return result.affectedRows;
-  },
 
   delete: async (id) => {
-    const [result] = await pool.execute('DELETE FROM products WHERE id = ?', [
+    const [result] = await pool.execute("DELETE FROM products WHERE id = ?", [
       id,
     ]);
     return result.affectedRows;
   },
 
   getAll: async () => {
-    const [rows] = await pool.execute('SELECT * FROM products');
+
+    const [rows] = await pool.execute("SELECT * FROM products");
     return rows;
   },
 };

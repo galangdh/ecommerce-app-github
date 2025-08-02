@@ -10,9 +10,10 @@ const ProductModel = {
   },
 
   findById: async (id) => {
-    const [rows] = await pool.execute('SELECT * FROM products WHERE id = ?', [
-      id,
-    ]);
+    const [rows] = await pool.execute(
+      'SELECT * FROM products WHERE id = ?',
+      [id]
+    );
     return rows[0];
   },
 
@@ -24,22 +25,18 @@ const ProductModel = {
     return result.affectedRows;
   },
 
-  updateStock: async (id, stock) => {
-    const [result] = await pool.execute('UPDATE products SET stock = ? WHERE id = ?', [stock, id]);
-    return result.affectedRows;
-  },
-
   delete: async (id) => {
-    const [result] = await pool.execute('DELETE FROM products WHERE id = ?', [
-      id,
-    ]);
+    const [result] = await pool.execute(
+      'DELETE FROM products WHERE id = ?',
+      [id]
+    );
     return result.affectedRows;
   },
 
   getAll: async () => {
     const [rows] = await pool.execute('SELECT * FROM products');
     return rows;
-  },
+  }
 };
 
 module.exports = ProductModel;

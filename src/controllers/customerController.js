@@ -1,51 +1,22 @@
-const CustomerModel = require('../../customer-service/src/models/customerModel');
-const axios = require('axios');
-const { sendEvent } = require('../../customer-service/src/config/queue');
+const CustomerModel = require('../models/customerModel');
 
 const CustomerController = {
   createCustomer: async (req, res) => {
     const { userId, name, email, phone, address } = req.body;
+    console.log('Received data:', { userId, name, email, phone, address });
+
     if (!userId || !name || !email) {
-      return res
-        .status(400)
-        .json({ message: "User ID, name, and email are required" });
+      return res.status(400).json({ message: 'User ID, name, and email are required' });
     }
+
     try {
-      
-      const customerId = await CustomerModel.create(
-        userId,
-        name,
-        email,
-        phone,
-        address
-      );
-
-
-      sendEvent(
-        "CREATE_CUSTOMER",
-        Buffer.from(
-          JSON.stringify({
-            id: customerId,
-            name: name,
-            email: email,
-          })
-        )
-      );
-      res
-        .status(201)
-        .json({ message: "Customer created successfully", customerId });
+      const customerId = await CustomerModel.create(userId, name, email, phone, address);
+      res.status(201).json({ message: 'Customer created successfully', customerId });
     } catch (error) {
-      console.error(
-        "Error creating customer:",
-        error.response ? error.response.data : error.message
-      );
-      res.status(500).json({
-        message: "Error creating customer",
-        error: error.message || error.code,
-      });
+      console.error('Error creating customer:', error);
+      res.status(500).json({ message: 'Error creating customer' });
     }
   },
-
 
   getCustomerById: async (req, res) => {
     const { id } = req.params;
@@ -66,9 +37,7 @@ const CustomerController = {
     try {
       const customer = await CustomerModel.findByUserId(userId);
       if (!customer) {
-        return res
-          .status(404)
-          .json({ message: 'Customer not found for this user ID' });
+        return res.status(404).json({ message: 'Customer not found for this user ID' });
       }
       res.status(200).json(customer);
     } catch (error) {
@@ -81,35 +50,16 @@ const CustomerController = {
     const { id } = req.params;
     const { name, email, phone, address } = req.body;
     try {
-      const affectedRows = await CustomerModel.update(
-        id,
-        name,
-        email,
-        phone,
-        address
-      );
+      const affectedRows = await CustomerModel.update(id, name, email, phone, address);
       if (affectedRows === 0) {
-        return res
-          .status(404)
-          .json({ message: "Customer not found or no changes made" });
+        return res.status(404).json({ message: 'Customer not found or no changes made' });
       }
-      sendEvent(
-        "UPDATE_CUSTOMER",
-        Buffer.from(
-          JSON.stringify({
-            id: customerId,
-            name: name,
-            email: email,
-          })
-        )
-      );
-      res.status(200).json({ message: "Customer updated successfully" });
+      res.status(200).json({ message: 'Customer updated successfully' });
     } catch (error) {
-      console.error("Error updating customer:", error);
-      res.status(500).json({ message: "Error updating customer" });
+      console.error('Error updating customer:', error);
+      res.status(500).json({ message: 'Error updating customer' });
     }
   },
-
 
   deleteCustomer: async (req, res) => {
     const { id } = req.params;
@@ -133,7 +83,7 @@ const CustomerController = {
       console.error('Error getting all customers:', error);
       res.status(500).json({ message: 'Error getting all customers' });
     }
-  },
+  }
 };
 
 module.exports = CustomerController;

@@ -1,4 +1,4 @@
-const pool = require('../../customer-service/src/config/db');
+const pool = require('../config/db');
 
 const CustomerModel = {
   create: async (userId, name, email, phone, address) => {
@@ -10,9 +10,10 @@ const CustomerModel = {
   },
 
   findById: async (id) => {
-    const [rows] = await pool.execute('SELECT * FROM customers WHERE id = ?', [
-      id,
-    ]);
+    const [rows] = await pool.execute(
+      'SELECT * FROM customers WHERE id = ?',
+      [id]
+    );
     return rows[0];
   },
 
@@ -33,16 +34,17 @@ const CustomerModel = {
   },
 
   delete: async (id) => {
-    const [result] = await pool.execute('DELETE FROM customers WHERE id = ?', [
-      id,
-    ]);
+    const [result] = await pool.execute(
+      'DELETE FROM customers WHERE id = ?',
+      [id]
+    );
     return result.affectedRows;
   },
 
   getAll: async () => {
     const [rows] = await pool.execute('SELECT * FROM customers');
     return rows;
-  },
+  }
 };
 
 module.exports = CustomerModel;
